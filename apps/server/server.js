@@ -1,3 +1,6 @@
+const sessionRoutes =
+require("./routes/sessionRoutes");
+
 const voucherRoutes =
 require("./routes/voucherRoutes");
 
@@ -15,6 +18,10 @@ app.use(
   voucherRoutes
 );
 
+app.use(
+  "/api/sessions",
+  sessionRoutes
+);
 
 app.get("/", (req, res) => {
 

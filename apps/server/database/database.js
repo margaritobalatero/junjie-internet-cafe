@@ -1,7 +1,13 @@
+const path = require("path");
 const sqlite3 = require("sqlite3").verbose();
 
+const dbPath = path.join(
+  __dirname,
+  "../../../database/cafe.db"
+);
+
 const db = new sqlite3.Database(
-  "../database/cafe.db",
+  dbPath,
   (err) => {
 
     if (err) {
@@ -17,6 +23,5 @@ const db = new sqlite3.Database(
 
   }
 );
-
 
 module.exports = db;

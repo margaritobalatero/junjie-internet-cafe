@@ -1,3 +1,5 @@
+const clientManager = require("./clientManager");
+
 const { Server } = require("socket.io");
 
 let io;
@@ -15,19 +17,23 @@ function initialize(server) {
 
     socket.on("register-computer", (computer) => {
 
-    console.log(
-        `${computer.displayName} connected`
-    );
+    clientManager.register(socket.id, computer);
 
-    console.log(computer);
+    console.log(`${computer.displayName} connected`);
+
+    console.log(clientManager.getAll());
 
 });
 
     socket.on("disconnect", () => {
 
-      console.log("Client disconnected:", socket.id);
+    clientManager.remove(socket.id);
 
-    });
+    console.log("Client disconnected:", socket.id);
+
+    console.log(clientManager.getAll());
+
+});
 
   });
 
