@@ -1,13 +1,13 @@
 {
-  "name": "electron",
-  "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "name": "junjie-electron",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Electron shell for Junjie Internet Cafe",
+  "main": "src/main/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "electron ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs"
+  "devDependencies": {
+    "electron": "^43.2.0"
+  }
 }
