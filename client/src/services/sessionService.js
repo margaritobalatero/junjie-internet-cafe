@@ -2,11 +2,12 @@ let currentSession = null;
 
 export function startSession(voucher) {
   currentSession = {
-    id: crypto.randomUUID(),
     voucherId: voucher.id,
     voucherCode: voucher.code,
-    totalSeconds: voucher.minutes * 60,
-    startedAt: Date.now()
+
+    durationSeconds: voucher.minutes * 60,
+
+    startedAt: Date.now(),
   };
 }
 
