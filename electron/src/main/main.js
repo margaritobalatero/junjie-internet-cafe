@@ -7,7 +7,7 @@ function createWindow() {
     title: 'Junjie Internet Cafe'
   });
 
-  win.loadURL('https://example.com');
+  win.loadURL('http://localhost:5173');
 }
 
 app.whenReady().then(createWindow);
