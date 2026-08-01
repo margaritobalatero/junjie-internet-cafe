@@ -5,6 +5,18 @@ import { socket } from "./services/socketService";
 
 socket.connect();
 
+socket.on("connect", () => {
+
+  console.log("Connected to server:", socket.id);
+
+});
+
+socket.on("server-time", (data) => {
+
+  console.log("Server Time:", data.now);
+
+});
+
 socket.emit("register-computer", {
 
     computerName: "CLIENT-2",

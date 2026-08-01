@@ -35,7 +35,16 @@ function initialize(server) {
 
 });
 
-  });
+   });
+
+  // Broadcast server time every second
+  setInterval(() => {
+
+    io.emit("server-time", {
+      now: Date.now()
+    });
+
+  }, 1000);
 
   return io;
 }
