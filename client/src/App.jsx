@@ -1,48 +1,24 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Welcome from "./pages/Welcome/Welcome";
+import Session from "./pages/Session/Session";
+import Expired from "./pages/Expired/Expired";
+import Admin from "./pages/Admin/Admin";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import NotFound from "./pages/NotFound";
+
 function App() {
   return (
-    <div
-      style={{
-        height: "100vh",
-        background: "#202124",
-        color: "white",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        fontFamily: "Arial"
-      }}
-    >
-      <div style={{ textAlign: "center", width: 420 }}>
-        <h1>JUNJIE INTERNET CAFE</h1>
-
-        <p>Welcome to Junjie Internet Cafe</p>
-
-        <p>Please enter your voucher code.</p>
-
-        <input
-          type="text"
-          placeholder="Voucher Code"
-          style={{
-            width: "100%",
-            padding: "12px",
-            fontSize: "18px",
-            marginTop: "20px",
-            marginBottom: "20px",
-            boxSizing: "border-box"
-          }}
-        />
-
-        <button
-          style={{
-            width: "100%",
-            padding: "14px",
-            fontSize: "18px",
-            cursor: "pointer"
-          }}
-        >
-          START SESSION
-        </button>
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Welcome />} />
+        <Route path="/session" element={<Session />} />
+        <Route path="/expired" element={<Expired />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
