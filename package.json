@@ -1,0 +1,12 @@
+{
+  "name": "junjie-internet-cafe",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Internet Cafe Management System",
+  "workspaces": [
+    "client",
+    "electron",
+    "server"
+  ],
+  "scripts": {}
+}
