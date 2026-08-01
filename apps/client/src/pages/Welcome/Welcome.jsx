@@ -10,15 +10,16 @@ export default function Welcome() {
   const [voucherCode, setVoucherCode] = useState("");
   const [error, setError] = useState("");
 
-  function handleStart() {
-    const result = validateVoucher(voucherCode);
+  async function handleStart() {
+    const result =
+  await validateVoucher(voucherCode);
 
     if (!result.success) {
       setError(result.message);
       return;
     }
 
-    useVoucher(result.voucher.id);
+    await useVoucher(result.voucher.id);
 
     startSession(result.voucher);
 
