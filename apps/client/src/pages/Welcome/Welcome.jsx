@@ -1,3 +1,4 @@
+import { createSession } from "../../services/serverSessionService";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -19,11 +20,19 @@ export default function Welcome() {
       return;
     }
 
-    await useVoucher(result.voucher.id);
+   const sessionResult =
+  await createSession(result.voucher);
 
-    startSession(result.voucher);
+if (!sessionResult.success) {
+  setError("Unable to create session.");
+  return;
+}
 
-    navigate("/session");
+await useVoucher(result.voucher.id);
+
+startSession(result.voucher);
+
+navigate("/session");
   }
 
   function handleKeyDown(e) {
