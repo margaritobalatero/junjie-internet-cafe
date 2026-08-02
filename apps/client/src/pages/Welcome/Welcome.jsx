@@ -2,7 +2,10 @@ import { createSession } from "../../services/serverSessionService";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { validateVoucher, useVoucher } from "../../services/voucherService";
+import {
+  validateVoucher,
+  useVoucher
+} from "../../services/voucherApi";
 import { startSession } from "../../services/sessionService";
 
 export default function Welcome() {
@@ -11,29 +14,57 @@ export default function Welcome() {
   const [voucherCode, setVoucherCode] = useState("");
   const [error, setError] = useState("");
 
-  async function handleStart() {
-    const result =
-  await validateVoucher(voucherCode);
+async function handleStart() {
 
-    if (!result.success) {
-      setError(result.message);
-      return;
-    }
+  const result =
+    await validateVoucher(voucherCode);
 
-   const sessionResult =
-  await createSession(result.voucher);
+  if (!result.success) {
 
-if (!sessionResult.success) {
-  setError("Unable to create session.");
-  return;
-}
+    setError(result.message);
 
-await useVoucher(result.voucher.id);
+    return;
 
-startSession(result.voucher);
-
-navigate("/session");
   }
+
+  const useResult =
+    await useVoucher(result.voucher.id);
+
+  if (!useResult.success) {
+
+    setError("Unable to use voucher.");
+
+    return;
+
+  }
+
+  const sessionResult =
+    await createSession(
+      result.voucher,
+      2
+    );
+
+  if (!sessionResult.success) {
+
+    setError("Unable to create session.");
+
+    return;
+
+  }
+
+  startSession(
+
+    sessionResult.sessionId,
+
+    result.voucher,
+
+    2
+
+  );
+
+  navigate("/session");
+
+}
 
   function handleKeyDown(e) {
     if (e.key === "Enter") {

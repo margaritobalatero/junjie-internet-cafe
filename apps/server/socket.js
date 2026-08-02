@@ -1,4 +1,12 @@
+const {
+  isExpired,
+  markExpired
+} = require("./services/expiredSessions");
+
 const clientManager = require("./clientManager");
+
+const { getRemainingTime } =
+require("./services/sessionTimer");
 
 const { Server } = require("socket.io");
 
@@ -38,13 +46,69 @@ function initialize(server) {
    });
 
   // Broadcast server time every second
-  setInterval(() => {
+setInterval(() => {
 
-    io.emit("server-time", {
-      now: Date.now()
+  getRemainingTime((sessions) => {
+
+    console.log("Timer Service:", sessions);
+
+
+  
+
+
+    const computers = clientManager.getAll();
+
+
+    computers.forEach((computer) => {
+
+const pcSession = sessions.find(
+    session => session.pcNumber == computer.pcNumber
+);
+
+if (!pcSession) {
+
+    io.to(computer.socketId).emit("session-ended");
+
+    return;
+
+}
+
+if (pcSession.remainingSeconds <= 0) {
+
+    if (!isExpired(pcSession.sessionId)) {
+
+        markExpired(pcSession.sessionId);
+
+        io.to(computer.socketId).emit(
+            "session-ended",
+            {
+                sessionId: pcSession.sessionId
+            }
+        );
+
+        console.log(
+            `Session ${pcSession.sessionId} expired.`
+        );
+
+    }
+
+}
+else {
+
+    io.to(computer.socketId).emit(
+        "session-update",
+        pcSession
+    );
+
+}
+
     });
 
-  }, 1000);
+
+  });
+
+
+}, 1000);
 
   return io;
 }

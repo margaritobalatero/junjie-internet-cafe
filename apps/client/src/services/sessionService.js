@@ -1,24 +1,30 @@
 let currentSession = null;
 
-
-export function startSession(voucher) {
+export function startSession(
+  sessionId,
+  voucher,
+  pcNumber
+) {
 
   currentSession = {
+
+    sessionId,
 
     voucherId: voucher.id,
 
     voucherCode: voucher.code,
+
+    pcNumber,
 
     durationSeconds: voucher.minutes * 60,
 
     startedAt: Date.now(),
 
     addedSeconds: 0
+
   };
 
 }
-
-
 
 export function getSession() {
 
@@ -26,23 +32,20 @@ export function getSession() {
 
 }
 
-
-
-export function extendSession(voucher) {
+export function extendSession(
+  voucher,
+  endedAt
+) {
 
   if (!currentSession) return;
 
+  currentSession.voucherId = voucher.id;
 
-  currentSession.durationSeconds +=
-    voucher.minutes * 60;
+  currentSession.voucherCode = voucher.code;
 
-
-  currentSession.addedSeconds +=
-    voucher.minutes * 60;
+  currentSession.serverEndedAt = endedAt;
 
 }
-
-
 
 export function clearSession() {
 

@@ -11,17 +11,34 @@ socket.on("connect", () => {
 
 });
 
+socket.emit("register-computer", {
+
+    pcNumber: 2,
+
+    computerName: "CLIENT-2",
+
+    displayName: "PC-2"
+
+});
+
+socket.on("session-update", (session) => {
+
+  console.log(
+    "SESSION UPDATE:",
+    session
+  );
+
+});
+
 socket.on("server-time", (data) => {
 
   console.log("Server Time:", data.now);
 
 });
 
-socket.emit("register-computer", {
+socket.on("session-ended", () => {
 
-    computerName: "CLIENT-2",
-
-    displayName: "PC-2"
+    console.log("SESSION EXPIRED");
 
 });
 

@@ -2,24 +2,13 @@ const express = require("express");
 
 const router = express.Router();
 
-
 const {
   validateVoucher,
   useVoucher
 } = require("../controllers/voucherController");
 
+router.post("/validate", validateVoucher);
 
-
-router.get(
-  "/:code",
-  validateVoucher
-);
-
-
-router.post(
-  "/use",
-  useVoucher
-);
-
+router.post("/use", useVoucher);
 
 module.exports = router;

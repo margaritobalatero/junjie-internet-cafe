@@ -3,7 +3,7 @@ const db = require("./database");
 
 const vouchers = [
 
-  ["ABC123",30],
+  ["ABC123",1],
 
   ["XYZ789",60],
 

@@ -1,207 +1,115 @@
-import { useState } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getSession, extendSession } from "../../services/sessionService";
-import { validateVoucher, useVoucher } from "../../services/voucherService";
-
-import useSessionTimer from "../../hooks/useSessionTimer";
+import { getSession, clearSession } from "../../services/sessionService";
+import useServerTimer from "../../hooks/useServerTimer";
 import { formatTime } from "../../utils/time";
-
 
 export default function Session() {
 
-
   const navigate = useNavigate();
-
 
   const session = getSession();
 
+  const beepPlayed = useRef(false);
 
-  const remaining = useSessionTimer(session);
+  useEffect(() => {
 
+    if (!session) {
+      navigate("/", { replace: true });
+    }
 
-  const [voucherCode, setVoucherCode] = useState("");
-
-  const [message, setMessage] = useState("");
-
-
+  }, [session, navigate]);
 
   if (!session) {
-
-    navigate("/");
-
     return null;
-
   }
 
+  const {
+    remaining,
+    expired
+  } = useServerTimer(session.pcNumber);
 
+  // Reset beep flag whenever a new session page starts
+  useEffect(() => {
 
-  if (remaining === 0) {
+    beepPlayed.current = false;
 
-    navigate("/expired");
+  }, []);
 
-    return null;
+  // Play one warning beep at exactly 1 minute remaining
+  useEffect(() => {
 
-  }
+    if (remaining === 60 && !beepPlayed.current) {
 
+      beepPlayed.current = true;
 
+      const audio = new Audio("/sounds/beep.mp3");
 
-  function handleExtend() {
-
-
-    const result =
-      validateVoucher(voucherCode);
-
-
-
-    if (!result.success) {
-
-      setMessage(result.message);
-
-      return;
+      audio.play().catch((err) => {
+        console.log("Unable to play beep:", err);
+      });
 
     }
 
+  }, [remaining]);
 
+  useEffect(() => {
 
-    useVoucher(result.voucher.id);
+    if (!expired) return;
 
+    clearSession();
 
-    extendSession(result.voucher);
+    navigate("/", {
+      replace: true
+    });
 
-
-
-    setVoucherCode("");
-
-    setMessage(
-      `Added ${result.voucher.minutes} minutes`
-    );
-
-  }
-
-
-
-  const showWarning = remaining <= 60;
-
-
+  }, [expired, navigate]);
 
   return (
 
     <div
       style={{
-        height:"100vh",
-        background:"#202124",
-        color:"white",
-        display:"flex",
-        justifyContent:"center",
-        alignItems:"center",
-        fontFamily:"Arial"
+        height: "100vh",
+        background: "#202124",
+        color: "white",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        fontFamily: "Arial"
       }}
     >
 
-
-      <div style={{textAlign:"center"}}>
-
+      <div
+        style={{
+          textAlign: "center"
+        }}
+      >
 
         <h1>
           JUNJIE INTERNET CAFE
         </h1>
 
-
         <h2>
           Voucher: {session.voucherCode}
         </h2>
-
-
 
         <h3>
           Time Remaining
         </h3>
 
-
         <div
           style={{
-            fontSize:"50px",
-            fontWeight:"bold"
+            fontSize: "60px",
+            fontWeight: "bold"
           }}
         >
-          {formatTime(remaining)}
+          {remaining === null
+            ? "--:--"
+            : formatTime(remaining)}
         </div>
 
-
-
-        {
-          showWarning && (
-
-            <div
-              style={{
-                marginTop:"30px"
-              }}
-            >
-
-              <h2>
-                ⚠ Session expires in 1 minute
-              </h2>
-
-
-              <p>
-                Enter another voucher to continue
-              </p>
-
-
-              <input
-
-                value={voucherCode}
-
-                onChange={(e)=>
-                  setVoucherCode(
-                    e.target.value.toUpperCase()
-                  )
-                }
-
-
-                placeholder="Voucher Code"
-
-                style={{
-                  padding:"12px",
-                  fontSize:"18px"
-                }}
-
-              />
-
-
-              <br/><br/>
-
-
-              <button
-                onClick={handleExtend}
-
-                style={{
-                  padding:"12px 30px",
-                  fontSize:"18px"
-                }}
-              >
-                Continue Session
-              </button>
-
-
-
-              {
-                message &&
-                <p>
-                  {message}
-                </p>
-              }
-
-
-            </div>
-
-          )
-        }
-
-
       </div>
-
 
     </div>
 

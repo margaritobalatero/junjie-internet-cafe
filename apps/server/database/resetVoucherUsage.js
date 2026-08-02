@@ -1,4 +1,4 @@
-const db = require("./database/database");
+const db = require("./database");
 
 db.run(
   `
@@ -8,12 +8,17 @@ db.run(
     used_at = NULL
   `,
   function (err) {
+
     if (err) {
-      console.error(err.message);
+      console.error(err);
       return;
     }
 
-    console.log(`Reset ${this.changes} voucher(s).`);
+    console.log(
+      `Reset ${this.changes} vouchers.`
+    );
+
     db.close();
+
   }
 );

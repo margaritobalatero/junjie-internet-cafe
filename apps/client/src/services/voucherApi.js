@@ -1,57 +1,59 @@
-const API_URL = "http://192.168.10.118:5000/api/sessions";
+const API_URL = "http://192.168.10.118:5000/api/vouchers";
 
-export async function createSession(
-  voucher,
-  pcNumber
-) {
+export async function validateVoucher(code) {
 
   const response = await fetch(
-    `${API_URL}/start`,
+
+    `${API_URL}/validate`,
+
     {
+
       method: "POST",
 
       headers: {
+
         "Content-Type": "application/json"
+
       },
 
       body: JSON.stringify({
 
-        voucher,
-
-        pcNumber
+        code
 
       })
+
     }
+
   );
 
   return await response.json();
 
 }
 
-export async function extendSession(
-  sessionId,
-  voucher
-) {
+export async function useVoucher(id) {
 
   const response = await fetch(
-    `${API_URL}/extend`,
+
+    `${API_URL}/use`,
+
     {
 
       method: "POST",
 
       headers: {
+
         "Content-Type": "application/json"
+
       },
 
       body: JSON.stringify({
 
-        sessionId,
-
-        voucher
+        id
 
       })
 
     }
+
   );
 
   return await response.json();

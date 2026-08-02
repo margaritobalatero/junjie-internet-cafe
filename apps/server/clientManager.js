@@ -25,9 +25,34 @@ function getAll() {
   return [...clients.values()];
 }
 
+function getBySocket(socketId) {
+
+  return clients.get(socketId);
+
+}
+
+
+function getSocketByPC(pcNumber) {
+
+  for (const [socketId, client] of clients) {
+
+   if (Number(client.pcNumber) === Number(pcNumber)) {
+
+      return socketId;
+
+    }
+
+  }
+
+  return null;
+
+}
+
 module.exports = {
   register,
   heartbeat,
   remove,
-  getAll
+  getAll,
+  getBySocket,
+  getSocketByPC
 };
